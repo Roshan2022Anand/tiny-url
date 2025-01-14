@@ -1,18 +1,13 @@
 import express from "express";
+import urlRouter from "./routes/url.routes";
 import { Request, Response } from "express";
-import crypto from "crypto";
+import dotenv from "dotenv";
+dotenv.config();
 const app = express();
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World");
-});
+app.use(express.urlencoded({ extended: false }));
 
-app.get("/test", (req: Request, res: Response) => {
-  console.log("path :", req.path);
-  const uniqueID = crypto.randomBytes(4).toString("hex");
-  console.log("uniqueID :", uniqueID);
-  res.send("Hello World");
-});
+app.use("/", urlRouter);
 
 app.listen(5000, () => {
   console.log("Server is running on port 5000");
