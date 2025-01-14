@@ -14,7 +14,6 @@ export const makeShortUrl = async (req: Request, res: Response) => {
     }
     const uniqueID = crypto.randomBytes(3).toString("hex");
     const shortUrl = `${req.headers.host}/${uniqueID}`;
-    console.log(shortUrl);
     await pool.query(`
         INSERT INTO redirectUrl(short_url,redirect_url)
       VALUES ('${shortUrl}','${url}')`);

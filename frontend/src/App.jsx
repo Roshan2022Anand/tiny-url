@@ -11,7 +11,7 @@ const App = () => {
     const url = inputRef.current.value;
     if (!url) return;
 
-    const res = await fetch("http://localhost:5000/short", {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/short`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
