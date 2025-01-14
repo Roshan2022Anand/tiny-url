@@ -1,30 +1,35 @@
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
-
+import { FiLoader } from "react-icons/fi";
 const App = () => {
   const inputRef = useRef(null);
 
   const [shortUrl, setshortUrl] = useState("");
+  const [loading, setloading] = useState(false);
 
   const createShortUrl = async () => {
-    setshortUrl("");
     const url = inputRef.current.value;
     if (!url) return;
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/short`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ url }),
-    });
-    const { error, shortUrl, message } = await res.json();
-    if (error) {
-      toast.error(error);
-      return;
+    setloading(true);
+    setshortUrl("");
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/short`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url }),
+      });
+      const { error, shortUrl, message } = await res.json();
+      if (error) toast.error(error);
+      else {
+        setshortUrl(shortUrl);
+        toast.success(message);
+      }
+    } catch {
+      toast.error("Something went wrong, please try again");
     }
-    setshortUrl(shortUrl);
-    toast.success(message);
+    setloading(false);
   };
 
   return (
@@ -45,7 +50,7 @@ const App = () => {
             className="bg-blue-500 rounded-md px-2 py-1"
             onClick={createShortUrl}
           >
-            Shorten
+            {loading ? <FiLoader /> : "Shorten"}
           </button>
         </section>
         {shortUrl && (
@@ -56,7 +61,7 @@ const App = () => {
               <a href={`${inputRef.current.value}`}>{inputRef.current.value}</a>
             </p>
             <p>
-              Short url : <a href={`${shortUrl}`}>{shortUrl}</a>
+              Short url : <a>{shortUrl}</a>
             </p>
           </section>
         )}
