@@ -1,14 +1,14 @@
 import express from "express";
 import urlRouter from "./routes/url.routes";
+const cors = require("cors");
 import dotenv from "dotenv";
-import path from "path";
 dotenv.config();
 const app = express();
 
+app.use(cors({ origin: "*" }));
+
 app.use(express.urlencoded({ extended: false }));
-app.set("view engine", "ejs");
-app.set("views", path.resolve("./views"));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.json());
 
 app.use("/", urlRouter);
 
